@@ -3,22 +3,23 @@ from pathlib import Path
 import dj_database_url
 import logging
 
-# Setup logging
+# ✅ Setup logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# BASE DIR
+# ✅ Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY: Secret key
+# ✅ Secret Key
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-secret-key')
 
-# DEBUG mode
+# ✅ Debug Mode
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# Allowed hosts
+# ✅ Allowed Hosts
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
-# Apps
+# ✅ Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,14 +27,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'Eco_Trio_Sub',
 ]
 
-# Middleware
+# ✅ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # for static file serving
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -42,13 +42,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# ✅ URL Configuration
 ROOT_URLCONF = 'Eco_Trio_Main.urls'
 
-# Templates
+# ✅ Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Eco_Trio_Main', 'templates')],
+        'DIRS': [BASE_DIR / 'Eco_Trio_Main' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -61,12 +62,14 @@ TEMPLATES = [
     },
 ]
 
+# ✅ WSGI
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# ✅ DATABASE
-DATABASE_URL = os.getenv("DATABASE_URL")
+# ✅ Database
+DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("PGDATABASE_URL")
 
 if DATABASE_URL:
+    logger.info("✅ Using PostgreSQL database.")
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -97,17 +100,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static Files
+# ✅ Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Eco_Trio_Main', 'statics')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / 'Eco_Trio_Main' / 'statics']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ✅ Media Files
+# ✅ Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# ✅ Email (optional)
+# ✅ Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

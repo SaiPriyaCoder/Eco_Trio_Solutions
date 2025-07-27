@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: eco-trio
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python manage.py runserver 0.0.0.0:8000
+
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: Eco_Trio_Main.settings
+      - key: SECRET_KEY
+        value: your_secret_key_here
+      - key: ALLOWED_HOSTS
+        value: yourapp.onrender.com

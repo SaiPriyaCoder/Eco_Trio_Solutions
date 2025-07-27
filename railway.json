@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "pip install -r requirements.txt"
+  },
+  "start": {
+    "cmd": "gunicorn Eco_Trio_Main.wsgi --bind 0.0.0.0:$PORT"
+  }
+}

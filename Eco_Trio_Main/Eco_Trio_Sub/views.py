@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import random
+import requests
 from .models import Registration,TeamMember,Collaboration
 from django.utils.dateparse import parse_datetime
 from django.contrib import messages
@@ -170,7 +171,7 @@ def logout_view(request):
 #             return render(request, 'register.html', {'error': 'Please fill all required fields.'})
 #     return render(request, 'register.html')
 
-import requests
+
 
 def register_view(request):
     if request.method == 'POST':

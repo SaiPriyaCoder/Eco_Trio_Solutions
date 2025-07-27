@@ -17,7 +17,7 @@ SECRET_KEY = 'your-production-secret-key'  # Replace this with a secure value
 DEBUG = False
 
 # Allowed hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["eco-trio-solutions-zud7.onrender.com", "127.0.0.1", "localhost"]
 
 # Installed apps
 INSTALLED_APPS = [
@@ -69,7 +69,7 @@ DATABASES = {
         'NAME': 'Eco_Trio_Solutions',
         'USER': 'postgres',
         'PASSWORD': 'chaitu@123',
-        'HOST': 'your-render-db-hostname',  # e.g. dpg-xxxxx.render.com
+        'HOST': 'localhost',  # e.g. dpg-xxxxx.render.com
         'PORT': '5432',
     }
 }
@@ -103,8 +103,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'ecotriosolutionweb@gmail.com'
+EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'
 
 # Auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

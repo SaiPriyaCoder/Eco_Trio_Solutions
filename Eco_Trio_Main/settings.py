@@ -1,18 +1,24 @@
 import os
 from pathlib import Path
 import dj_database_url
+import logging
 
-# Base directory
+# Setup logging
+logger = logging.getLogger(__name__)
+
+# BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret key and debug from Railway environment variables
+# SECURITY: Secret key
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-secret-key')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Allow all hosts in Railway or set to your custom domain
-ALLOWED_HOSTS = ['*']  # or ['eco-trio-production.up.railway.app']
+# DEBUG mode
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# Installed apps
+# Allowed hosts
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+# Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -20,13 +26,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'Eco_Trio_Sub',
 ]
 
-# Middleware with Whitenoise
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # for static file serving
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,16 +63,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# Database (Railway provides DATABASE_URL)
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+# ✅ DATABASE
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Password validators
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    logger.warning("⚠️ DATABASE_URL not set. Falling back to SQLite.")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# ✅ Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -73,28 +91,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Locale
+# ✅ Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ STATIC FILES
+# ✅ Static Files
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Eco_Trio_Main', 'statics'),  # FIXED: your custom folder
-]
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Eco_Trio_Main', 'statics')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ✅ MEDIA FILES
+# ✅ Media Files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Email (Optional)
+# ✅ Email (optional)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -102,4 +115,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 
+# ✅ Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

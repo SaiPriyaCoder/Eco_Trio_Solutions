@@ -108,3 +108,5 @@ EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'
 
 # Auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+X_FRAME_OPTIONS = 'ALLOWALL'

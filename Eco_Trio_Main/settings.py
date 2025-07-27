@@ -10,14 +10,14 @@ logger = logging.getLogger(__name__)
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Secret key (keep it secret in production)
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-secret-key')
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'your-production-secret-key'  # Replace this with a secure value
 
-# Debug mode
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+# DEBUG mode
+DEBUG = False
 
 # Allowed hosts
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = ['your-render-app-name.onrender.com', 'localhost', '127.0.0.1']
 
 # Installed apps
 INSTALLED_APPS = [
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Eco_Trio_Sub',  # your app
+    'Eco_Trio_Sub',
 ]
 
 # Middleware
@@ -42,10 +42,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL config
 ROOT_URLCONF = 'Eco_Trio_Main.urls'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -62,25 +60,19 @@ TEMPLATES = [
     },
 ]
 
-# WSGI
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# ✅ DATABASE: PostgreSQL (via Railway)
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL:
-    logger.info("✅ PostgreSQL detected via DATABASE_URL.")
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+# ✅ DATABASE: PostgreSQL via Render
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Eco_Trio_Solutions',
+        'USER': 'postgres',
+        'PASSWORD': 'chaitu@123',
+        'HOST': 'your-render-db-hostname',  # e.g. dpg-xxxxx.render.com
+        'PORT': '5432',
     }
-else:
-    logger.warning("⚠️ DATABASE_URL not set. Falling back to SQLite.")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -90,29 +82,29 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Localization
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static files (for Railway)
+# Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'Eco_Trio_Main', 'statics')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ✅ Media files
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# ✅ Email settings (optional)
+# Email config (optional)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 # Auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

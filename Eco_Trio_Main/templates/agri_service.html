@@ -109,7 +109,7 @@
 
     <!-- Image on Right -->
     <div class="rounded-lg overflow-hidden shadow-lg">
-      <img src="{{ MEDIA_URL }}AI_Bio.png" alt="EcoTrio Future" class="w-full h-auto object-cover">
+      <img src="{%static 'media/AI_Bio.png'%}" alt="EcoTrio Future" class="w-full h-auto object-cover">
     </div>
 
   </div>
@@ -213,7 +213,7 @@
 
     <!-- Image Section -->
     <div class="rounded-lg overflow-hidden shadow-lg">
-      <img src="{{ MEDIA_URL }}Eco_Ai.png" alt="EcoTrio Sample" class="w-full h-auto object-cover">
+      <img src="{%static 'media/Eco_Ai.png'%}" alt="EcoTrio Sample" class="w-full h-auto object-cover">
     </div>
 
     <!-- Text Content Section -->
@@ -236,5 +236,6 @@
 {% endblock %}
 
 {% block mainscript %}
+  <script src="{% static 'js/agri_service.js' %}"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 {% endblock %}

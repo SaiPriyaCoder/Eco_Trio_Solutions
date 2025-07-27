@@ -4,13 +4,14 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')  # Use environment variable in production
+# Secret Key & Debug
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-secret-key')  # Must be set in Railway ENV
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-DEBUG = os.getenv('DJANGO_DEBUG', '') != 'False'
+# Allowed Hosts
+ALLOWED_HOSTS = ['*']  # Change to specific Railway domain in production if desired
 
-ALLOWED_HOSTS = ['*']
-
-# Application definition
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,8 +22,10 @@ INSTALLED_APPS = [
     'Eco_Trio_Sub',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Required for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,11 +54,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# ✅ Corrected and unified database configuration
+# ✅ Railway will inject this environment variable
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgres://postgres:chaitu@123@localhost:5432/Eco_Trio_Solutions',
-        conn_max_age=600
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
@@ -67,29 +71,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# ✅ Static and media files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'Eco_Trio_Main', 'statics'),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email Configuration (✅ keep secret credentials in env variables ideally)
+# ✅ Email settings (from Railway environment variables)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ecotriosolutionweb@gmail.com'
-EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')

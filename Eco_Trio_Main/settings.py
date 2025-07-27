@@ -11,13 +11,17 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'your-production-secret-key'  # Replace this with a secure value
+SECRET_KEY = 'your-production-secret-key'  # Replace with env var in production
 
 # DEBUG mode
 DEBUG = False
 
 # Allowed hosts
-ALLOWED_HOSTS = ["eco-trio-solutions-zud7.onrender.com", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "eco-trio-solutions-zud7.onrender.com",
+    "127.0.0.1",
+    "localhost",
+]
 
 # Installed apps
 INSTALLED_APPS = [
@@ -62,14 +66,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# ✅ DATABASE: PostgreSQL via Render
+# Database (Use correct Render DB host in production)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Eco_Trio_Solutions',
         'USER': 'postgres',
         'PASSWORD': 'chaitu@123',
-        'HOST': 'localhost',  # e.g. dpg-xxxxx.render.com
+        'HOST': 'localhost',  # Replace with actual DB host from Render
         'PORT': '5432',
     }
 }
@@ -90,26 +94,24 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Email config (optional)
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ecotriosolutionweb@gmail.com'
-EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'
+EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'  # ⚠️ Store this in environment variable!
 
-# Auto field
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-X_FRAME_OPTIONS = 'ALLOWALL'
+# X-Frame Options (change to 'ALLOWALL' only if needed for iframe embedding)
+X_FRAME_OPTIONS = 'DENY'

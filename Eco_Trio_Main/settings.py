@@ -17,7 +17,11 @@ SECRET_KEY = 'your-production-secret-key'  # Replace this with a secure value
 DEBUG = False
 
 # Allowed hosts
-ALLOWED_HOSTS = ['your-render-app-name.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "eco-trio-solutions-zud7.onrender.com",  # ← your Render URL
+]
 
 # Installed apps
 INSTALLED_APPS = [

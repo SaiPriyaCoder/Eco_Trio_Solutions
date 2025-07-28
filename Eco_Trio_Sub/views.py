@@ -189,21 +189,21 @@ def register_view(request):
             )
 
             # 🔄 Submit to Google Form
-            form_url = "https://docs.google.com/forms/d/e/XXXXXXXXXXXXXX/formResponse"  # change this
-            form_data = {
-                "entry.1111111111": data.get('first_name'),     # change IDs
-                "entry.2222222222": data.get('last_name'),
-                "entry.3333333333": data.get('phone'),
-                "entry.4444444444": data.get('email'),
-                "entry.5555555555": data.get('occupation'),
-                "entry.6666666666": data.get('interest'),
-                "entry.7777777777": data.get('device_info'),
-            }
+            # form_url = "https://docs.google.com/forms/d/e/XXXXXXXXXXXXXX/formResponse"  # change this
+            # form_data = {
+            #     "entry.1111111111": data.get('first_name'),     # change IDs
+            #     "entry.2222222222": data.get('last_name'),
+            #     "entry.3333333333": data.get('phone'),
+            #     "entry.4444444444": data.get('email'),
+            #     "entry.5555555555": data.get('occupation'),
+            #     "entry.6666666666": data.get('interest'),
+            #     "entry.7777777777": data.get('device_info'),
+            # }
 
-            try:
-                requests.post(form_url, data=form_data)
-            except Exception as e:
-                print("Google Form submission failed:", e)
+            # try:
+            #     requests.post(form_url, data=form_data)
+            # except Exception as e:
+            #     print("Google Form submission failed:", e)
 
             # 📧 Email to admin
             subject = f"New Registration Submission from {data.get('first_name')}"

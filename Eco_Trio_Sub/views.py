@@ -234,14 +234,14 @@ def register_view(request):
 
 
 def home_view(request):
-    if not request.session.get('registered'):
-        return redirect('/register/')
+    # if not request.session.get('registered'):
+    #     return redirect('/register/')
     return render(request, 'index.html')
 
 
 def agri_services_view(request):
-    if not request.session.get('registered'):
-        return redirect('/register/')
+    # if not request.session.get('registered'):
+    #     return redirect('/register/')
     return render(request, 'agri_service.html')
 
 def global_view(request):

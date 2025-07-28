@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 import dj_database_url
 import logging
+from dotenv import load_dotenv
+load_dotenv()  
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -11,17 +13,13 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'your-production-secret-key'  # Replace with env var in production
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-secret-key")  # Replace default for dev only
 
-# DEBUG mode
-DEBUG = False
+# DEBUG mode - always False in production
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 # Allowed hosts
-ALLOWED_HOSTS = [
-    "eco-trio-solutions-zud7.onrender.com",
-    "127.0.0.1",
-    "localhost",
-]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "eco-trio-solutions-zud7.onrender.com").split(",")
 
 # Installed apps
 INSTALLED_APPS = [
@@ -51,7 +49,7 @@ ROOT_URLCONF = 'Eco_Trio_Main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Eco_Trio_Main', 'templates')],
+        'DIRS': [BASE_DIR / 'Eco_Trio_Main' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,16 +64,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Eco_Trio_Main.wsgi.application'
 
-# Database (Use correct Render DB host in production)
+# ✅ Production-ready database config for Render
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Eco_Trio_Solutions',
-        'USER': 'postgres',
-        'PASSWORD': 'chaitu@123',
-        'HOST': 'localhost',  # Replace with actual DB host from Render
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 # Password validation
@@ -92,26 +87,29 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files (Render & WhiteNoise)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'Eco_Trio_Main', 'staticfiles')
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ecotriosolutionweb@gmail.com'
-EMAIL_HOST_PASSWORD = 'xaaq jgsx lizd tgqk'  # ⚠️ Store this in environment variable!
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'ecotriosolutionweb@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # ✅ Store in env var
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# X-Frame Options (change to 'ALLOWALL' only if needed for iframe embedding)
+# Security headers (recommended)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 X_FRAME_OPTIONS = 'DENY'
